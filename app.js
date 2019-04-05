@@ -47,7 +47,7 @@ const argv = yargs
 
 var command = argv._[0]; 
 
-var addClass = () => {
+if(command === 'addClass') {
     filepath = "./data/" + argv.file;
     className = argv.className;
     fs.readFile(filepath, function(err, data) {
@@ -67,11 +67,7 @@ var addClass = () => {
             console.log(student);
             })
         }
-
     });
-}
-if(command === 'addClass') {
-    addClass();
 }
 
 if(command === 'addTeacher') {
@@ -89,6 +85,55 @@ if(command === 'addTeacher') {
     })
 }
 
+app.get('/students', (req, res) => {
+    var sql = 'SELECT * FROM students';
+    connection.query(sql, (err, result) => {
+    if (err) throw err;
+        res.status(200).send(result);
+    })
+})
+app.get('/student/:id_student', (req, res) => {
+    id_student = req.params.id_student;
+    var sql = 'SELECT * FROM students WHERE id_student = ?';
+    connection.query(sql, [id_student], (err, result) => {
+    if (err) throw err;
+        res.status(200).send(result);
+    })
+})
+
+app.get('/teachers', (req, res) => {
+    var sql = 'SELECT * FROM teachers';
+    connection.query(sql, (err, result) => {
+    if (err) throw err;
+        res.status(200).send(result);
+    })
+})
+
+app.get('/teacher/:id_teacher', (req, res) => {
+    id_teachers = req.params.id_teachers;
+    var sql = 'SELECT * FROM students WHERE id_teachers = ?';
+    connection.query(sql, [id_teachers], (err, result) => {
+    if (err) throw err;
+        res.status(200).send(result);
+    })
+})
+
+app.get('/students/:classNameUrl', (req, res) => {
+
+
+    classNameUrl = req.params.classNameUrl.split('-').join(' ');
+    console.log('url : ' + classNameUrl + ' className : ' + classNameUrl);
+    var sql = `SELECT * FROM students WHERE class = '${classNameUrl}'`;
+    connection.query(sql, (err, result) => {
+    if (err) throw err;
+    res.status(200).send(result);
+    })
+})
+
+
+app.listen(3000, () => {
+    console.log('Serveur écoutant le port 3000...');
+})
 
 // var addClass = () => {
     
